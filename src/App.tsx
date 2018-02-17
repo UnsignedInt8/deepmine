@@ -1,13 +1,11 @@
 import * as React from 'react';
 import './App.css';
-import { uint32func } from './test/Integer';
-
 const logo = require('./logo.svg');
+import { core as test } from './test/WebglTest';
 
 class App extends React.Component {
   render() {
-    let n = 0xffffff;
-    console.log(uint32func(n), n);
+    test
     return (
       <div className="App">
         <header className="App-header">

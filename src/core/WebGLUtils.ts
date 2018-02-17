@@ -12,7 +12,15 @@ export class WebGLUtils {
         return shader;
     }
 
-    static createProgram(gl: WebGLRenderingContext) {
-        let program = gl.createProgram;
+    static createProgram(gl: WebGLRenderingContext, shaders: WebGLShader[]) {
+        let program = gl.createProgram();
+        shaders.forEach(s => gl.attachShader(program, s));
+        gl.linkProgram(program);
+
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            throw gl.getProgramInfoLog(program);
+        }
+
+        return program;
     }
 }

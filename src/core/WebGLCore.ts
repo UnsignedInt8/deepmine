@@ -1,11 +1,13 @@
+import { WebGLUtils } from "./WebGLUtils";
 
 export abstract class WebGLCore {
 
     private canvas: HTMLCanvasElement;
     private gl: WebGLRenderingContext;
 
-    constructor() {
+    constructor(vs: string, fs: string) {
         this.init();
+        this.buildExec(vs, fs);
     }
 
     private init() {
@@ -25,6 +27,8 @@ export abstract class WebGLCore {
      * @param fs fragment shader program source code
      */
     protected buildExec(vs: string, fs: string) {
-
+        let shaders = [WebGLUtils.createShader(this.gl, this.gl.VERTEX_SHADER, vs)!, WebGLUtils.createShader(this.gl, this.gl.FRAGMENT_SHADER, fs)!];
+        let program = WebGLUtils.createProgram(this.gl, shaders);
+        this.gl.useProgram(program);
     }
 }
