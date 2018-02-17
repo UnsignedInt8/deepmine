@@ -16,7 +16,7 @@ export class WebGLUtils {
         let program = gl.createProgram();
         shaders.forEach(s => gl.attachShader(program, s));
         gl.linkProgram(program);
-
+        
         if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
             throw gl.getProgramInfoLog(program);
         }

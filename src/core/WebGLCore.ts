@@ -2,12 +2,14 @@ import { WebGLUtils } from "./WebGLUtils";
 
 export abstract class WebGLCore {
 
-    private canvas: HTMLCanvasElement;
-    private gl: WebGLRenderingContext;
+    protected canvas: HTMLCanvasElement;
+    protected gl: WebGLRenderingContext;
+    protected program: WebGLProgram;
 
     constructor(vs: string, fs: string) {
         this.init();
-        this.buildExec(vs, fs);
+        this.initProgram(vs, fs);
+        this.initContext();
     }
 
     private init() {
@@ -15,8 +17,7 @@ export abstract class WebGLCore {
         canvas.width = canvas.height = 1;
 
         let gl = canvas.getContext('webgl2') as WebGLRenderingContext;
-        gl.viewport(0, 0, 1, 1);
-
+        
         this.canvas = canvas;
         this.gl = gl;
     }
@@ -26,9 +27,13 @@ export abstract class WebGLCore {
      * @param vs vertex shader program source code
      * @param fs fragment shader program source code
      */
-    protected buildExec(vs: string, fs: string) {
+    private initProgram(vs: string, fs: string) {
         let shaders = [WebGLUtils.createShader(this.gl, this.gl.VERTEX_SHADER, vs)!, WebGLUtils.createShader(this.gl, this.gl.FRAGMENT_SHADER, fs)!];
-        let program = WebGLUtils.createProgram(this.gl, shaders);
+        let program = WebGLUtils.createProgram(this.gl, shaders)!;
+
         this.gl.useProgram(program);
+        this.program = program;
     }
+
+    abstract initContext();
 }

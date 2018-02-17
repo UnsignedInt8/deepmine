@@ -1,20 +1,22 @@
 import * as React from 'react';
 import './App.css';
 const logo = require('./logo.svg');
-import { core as test } from './test/WebglTest';
+import { WebglTest } from './test/WebglTest';
+import axios from 'axios';
 
 class App extends React.Component {
+
+  async componentDidMount() {
+    // setTimeout(() => new WebglTest(vs, fs), 3000);
+    let vs = (await axios.get('./vs.glsl')).data;
+    let fs = (await axios.get('./fs.glsl')).data;
+    new WebglTest(vs, fs);
+  }
+
   render() {
-    test
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+        <canvas id='ccc' width={128} height={128}>your browser</canvas>
       </div>
     );
   }
