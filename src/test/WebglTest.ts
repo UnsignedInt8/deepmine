@@ -19,6 +19,6 @@ export class WebglTest extends WebGLCore {
 
 }
 
-console.log(vs, fs);
+// console.log(vs, fs);
 
 // export const core = new WebglTest(vs, fs);

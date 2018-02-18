@@ -9,7 +9,7 @@ class App extends React.Component {
   async componentDidMount() {
     // setTimeout(() => new WebglTest(vs, fs), 3000);
     let vs = (await axios.get('./vs.glsl')).data;
-    let fs = (await axios.get('./fs.glsl')).data;
+    let fs = (await axios.get('./shaders/fragments/sha256.glsl')).data;
     new WebglTest(vs, fs);
   }
 
