@@ -6,7 +6,6 @@ uniform vec4 utransform;
 out vec4 color;
 
 void main(){
-    gl_Position = apos + utransform;
-    gl_PointSize = asize;
-    color = gl_Position;
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    gl_PointSize = 1.0;
 }

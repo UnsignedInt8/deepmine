@@ -144,7 +144,7 @@ void sha256_final(inout SHA256_CTX ctx, inout uint hash[32])
 	// Since this implementation uses little endian byte ordering and SHA uses big endian,
 	// reverse all the bytes when copying the final state to the output hash.
 	for (i = 0u; i < 4u; ++i) {
-		hash[i]      = (ctx.state[0] >> (24u - i * 8u)) & 0x000000ffu;
+		hash[i]       = (ctx.state[0] >> (24u - i * 8u)) & 0x000000ffu;
 		hash[i + 4u]  = (ctx.state[1] >> (24u - i * 8u)) & 0x000000ffu;
 		hash[i + 8u]  = (ctx.state[2] >> (24u - i * 8u)) & 0x000000ffu;
 		hash[i + 12u] = (ctx.state[3] >> (24u - i * 8u)) & 0x000000ffu;
@@ -156,7 +156,33 @@ void sha256_final(inout SHA256_CTX ctx, inout uint hash[32])
 }
 
 out vec4 result;
+uniform sampler2D data;
+uniform sampler2D coinb1;
+uniform float coinb1Length;
+uniform sampler2D coinb2;
+uniform float coinb2Length;
+uniform sampler2D merkleTree;
+uniform float merkleTreeLength;
+uniform uint version;
+uniform uint bits;
+uniform uint time;
+
+void hash256() {
+	SHA256_CTX ctx;
+	sha256_init(ctx);
+
+	for (float x = 0.0; x < coinb1Length; x++) {
+		texture(coinb1, vec2(x / coinb1Length, 0));
+	}
+}
 
 void main() {
-	result = vec4(0, 0, 0, 0);
+	SHA256_CTX ctx;
+	sha256_init(ctx);
+	// sha256_
+
+	vec4 v = texture(data, vec2(0, 0));
+	// #error v.
+	// result = vec4(1, 1, 0, 1);
+	result = v;
 }

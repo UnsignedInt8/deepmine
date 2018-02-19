@@ -1,3 +1,10 @@
+/**
+ * WebGL Core Class
+ * 
+ * Documents:
+ * 1. https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
+ */
+
 import { WebGLUtils } from "./WebGLUtils";
 
 export abstract class WebGLCore {
@@ -20,6 +27,8 @@ export abstract class WebGLCore {
         
         this.canvas = canvas;
         this.gl = gl;
+
+        document.body.appendChild(canvas);
     }
 
     /**
@@ -35,5 +44,5 @@ export abstract class WebGLCore {
         this.program = program;
     }
 
-    abstract initContext();
+    protected abstract initContext();
 }
