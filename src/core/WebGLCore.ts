@@ -24,7 +24,7 @@ export abstract class WebGLCore {
         canvas.width = canvas.height = 1;
 
         let gl = canvas.getContext('webgl2') as WebGLRenderingContext;
-        
+
         this.canvas = canvas;
         this.gl = gl;
 
@@ -45,4 +45,22 @@ export abstract class WebGLCore {
     }
 
     protected abstract initContext();
+
+    protected putUniformData(activeTexture: number, texIndex: number, field: string, data: ArrayBufferView) {
+        const RGBA32F = 34836;
+
+        let tex = this.gl.createTexture();
+        let loc = this.gl.getUniformLocation(this.program, field);
+
+        this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
+        this.gl.pixelStorei(this.gl.UNPACK_ALIGNMENT, 1);
+        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, RGBA32F, 100, Math.floor(data.byteLength / 4 / 100), 0, this.gl.RGBA, this.gl.FLOAT, data);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+        this.gl.uniform1i(loc, texIndex);
+
+        return tex;
+    }
 }
