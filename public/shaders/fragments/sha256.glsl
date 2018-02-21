@@ -15,7 +15,7 @@
 #define SIG0(x) (ROTRIGHT(x,7) ^ ROTRIGHT(x,18) ^ ((x) >> 3))
 #define SIG1(x) (ROTRIGHT(x,17) ^ ROTRIGHT(x,19) ^ ((x) >> 10))
 
-precision mediump float;
+precision lowp float;
 
 struct SHA256_CTX {
 	uint data[64];
@@ -90,21 +90,6 @@ void sha256_init(inout SHA256_CTX ctx)
 	ctx.state[7] = 0x5be0cd19u;
 }
 
-// void sha256_update(inout SHA256_CTX ctx, uint data[2], uint len)
-// {
-// 	uint i;
-
-// 	for (i = 0u; i < len; ++i) {
-// 		ctx.data[ctx.datalen] = data[i];
-// 		ctx.datalen++;
-// 		if (ctx.datalen == 64u) {
-// 			sha256_transform(ctx, ctx.data);
-// 			ctx.bitlen += 512u;
-// 			ctx.datalen = 0u;
-// 		}
-// 	}
-// }
-
 void sha256_update(inout SHA256_CTX ctx, uint data)
 {
 	ctx.data[ctx.datalen] = data;
@@ -145,10 +130,6 @@ void sha256_final(inout SHA256_CTX ctx, inout uint hash[32])
 	ctx.data[62] = ctx.bitlen >> 8;
 	ctx.data[61] = ctx.bitlen >> 16;
 	ctx.data[60] = ctx.bitlen >> 24;
-	// ctx.data[59] = ctx.bitlen >> 32;
-	// ctx.data[58] = ctx.bitlen >> 40;
-	// ctx.data[57] = ctx.bitlen >> 48;
-	// ctx.data[56] = ctx.bitlen >> 56;
 	ctx.data[59] = 0u;
 	ctx.data[58] = 0u;
 	ctx.data[57] = 0u;
@@ -191,47 +172,55 @@ void hash256() {
 	}
 }
 
-void main() {
+vec4 test() {
 	SHA256_CTX ctx;
 	sha256_init(ctx);
-	// sha256_
 
 	int offset = 0;
 	bool done = false;
 		float y = 0.0;
 
-	// while (!done) {
-	// 	for (float x = 0.0; x < 100.0; x++) {
-	// 		vec4 tuple = texture(data, vec2(x / 100.0, y)) * 1000.0;
-	// 		uint array[] = uint[4](uint(tuple.r), uint(tuple.g), uint(tuple.b), uint(tuple.a));
+	while (!done) {
+		for (float x = 0.0; x < 100.0; x++) {
+			vec4 tuple = texture(data, vec2(x / 100.0, y)) * 1000.0;
+			uint array[] = uint[4](uint(tuple.r), uint(tuple.g), uint(tuple.b), uint(tuple.a));
 
-	// 		for (int z = 0; z < 4; z++) {
-	// 			done = offset >= dataLength;
-	// 			if (done) break;
+			for (int z = 0; z < 4; z++) {
+				done = offset >= dataLength;
+				if (done) break;
 
-	// 			sha256_update(ctx, array[z]);
-	// 			offset++;
-	// 		}
+				sha256_update(ctx, array[z]);
+				offset++;
+			}
 
-	// 		if (done) break;
-	// 	}
+			if (done) break;
+		}
 
-	// 	y++;
-	// }
+		y++;
+	}
 
-	sha256_update(ctx, 97u);
+	// sha256_update(ctx, 98u);
 
 	uint hash[32];
 	sha256_final(ctx, hash);
 
-	// vec4 v = texture(data, vec2(0.99, 0)) * 3.921568627;
-	// #error v.
 	float v = 1.0 / 255.0;
 	float h1 = float(hash[0]) * v;
 	float h2 = float(hash[1]) * v;
-	float h3 = float(hash[2]) * v;
-	float h4 = float(hash[3]) * v;
+	float h3 = float(hash[30]) * v;
+	float h4 = float(hash[31]) * v;
+	return vec4(h1, h2, h3, h4);
+}
 
+void main() {
+	vec4 r;
+	for (int a = 0; a < 1; a++) {
+		r = test();
+	}
+	
+	// vec4 v = texture(data, vec2(0.99, 0)) * 3.921568627;
+	// #error v.
+	
 	// h1 = float(ROTLEFT(1u, 3)) * v;
 	// h2 = float(ROTRIGHT(200u, 2)) * v;
 	// h3 = float(CH(200, 12, 6)) * v;
@@ -254,7 +243,12 @@ void main() {
 
 	// result = vec4(float(hash[0]) * v, float(hash[1]) * v, float(hash[2]) * v, float(hash[3]) * v);
 	// result = vec4(ctx.state[0], ctx.state[1], ctx.state[2], ctx.state[3]) / 1000.0;
-	// result = vec4(y > 25.0 ? 1: 0, 0, 0, offset > 9999 ? 1 : 0);
-	result = vec4(h1, h2, h3, h4);
-	// result = v;
+	// vec4 vv = vec4(h1, h2, h3, h4);
+	// result = vec4(y > 25.0 ? 1: 0, 0, 0, offset > 10 ? 1 : 0);
+	// result = vv;
+	// result = vec4(v,v,v,v);
+	// result = vec4(h1,h2,h3,h4);
+	// result = vec4(0.5, 0.47, 0.6, 1);
+	result = r;
+	// result = vec4(hash[0], hash[1], hash[2], hash[3]);
 }

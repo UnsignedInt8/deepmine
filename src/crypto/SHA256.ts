@@ -21,6 +21,7 @@ export class SHA256 extends WebGLCore {
         this.gl.uniform1i(lengthLoc, textureBuffer.length);
 
         console.log(textureBuffer);
+        let time = Date.now();
         let texture = this.gl.createTexture()!;
         const RGBA32F = 34836;
 
@@ -35,12 +36,14 @@ export class SHA256 extends WebGLCore {
 
         this.gl.drawArrays(this.gl.POINTS, 0, 1);
 
+        console.log(Date.now() - time);
+
         let readBuf = new Uint8Array(4);
         this.gl.readPixels(0, 0, 1, 1, this.gl.RGBA, this.gl.UNSIGNED_BYTE, readBuf);
 
-        let flBuf = new Float32Array(4);
-        // this.gl.readPixels(0, 0, 1, 1, this.gl.RGBA, this.gl.FLOAT, flBuf);
-        console.log(readBuf, flBuf, Buffer.from(readBuf.buffer).toString('hex'));
+        console.log(readBuf, Buffer.from(readBuf.buffer).toString('hex'), Date.now() - time, 'ms');
+        setTimeout(() => {
+        }, 1000);
         this.gl.deleteTexture(texture);
     }
 

@@ -21,7 +21,7 @@ export abstract class WebGLCore {
 
     private init() {
         let canvas = document.createElement('canvas') as HTMLCanvasElement;
-        canvas.width = canvas.height = 1;
+        canvas.width = canvas.height = 10;
 
         let gl = canvas.getContext('webgl2') as WebGLRenderingContext;
 
